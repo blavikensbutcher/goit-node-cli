@@ -4,18 +4,32 @@ import path from "path";
 const contactsPath = path.resolve("db", "contacts.json");
 
 export async function listContacts() {
-  const data = await fs.readFile(contactsPath);
+
+  try {
+    const data = await fs.readFile(contactsPath);
+  } catch (e) {
+    console.log(e.message)
+  }
   return JSON.parse(data);
 }
 
 export async function getContactById(contactId) {
-  const data = await fs.readFile(contactsPath);
+  try {
+    const data = await fs.readFile(contactsPath);
+  } catch (e) {
+    console.log(e.message)
+  }
+
   const dataNormalized = JSON.parse(data);
   return dataNormalized.filter((item) => item.id === contactId);
 }
 
 export async function removeContact(contactId) {
+try {
   const data = await fs.readFile(contactsPath);
+} catch (e) {
+  console.log(e.message)
+}
   const dataNormalized = JSON.parse(data);
   const isExist = dataNormalized.some(contact => contact.id === contactId)
 
@@ -27,7 +41,11 @@ export async function removeContact(contactId) {
 }
 
 export async function addContact(name, email, phone) {
+  try {
   const data = await fs.readFile(contactsPath);
+  } catch (e) {
+    console.log(e.message)
+  }
   const dataArray = JSON.parse(data);
   const newUser = {
     id: String(Date.now()),
@@ -36,7 +54,11 @@ export async function addContact(name, email, phone) {
     phone,
   };
   dataArray.push(newUser);
+  try{
   await fs.writeFile(contactsPath, JSON.stringify(dataArray));
+  } catch (e) {
+    console.log(e.message)
+  }
 
   return newUser;
 }
