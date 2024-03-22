@@ -16,12 +16,7 @@ export async function getContactById(contactId) {
   try {
     const data = await fs.readFile(contactsPath);
     const dataNormalized = JSON.parse(data);
-    const isExist = dataNormalized.some((contact) => contact.id === contactId);
-    if (isExist) {
-      return dataNormalized.filter((item) => item.id === contactId)[0];
-    } else {
-      return null;
-    }
+    return dataNormalized.filter((item) => item.id === contactId)[0] || null;
   } catch (e) {
     console.log(e.message);
   }
@@ -31,7 +26,7 @@ export async function removeContact(contactId) {
   try {
     const data = await fs.readFile(contactsPath);
     const dataNormalized = JSON.parse(data);
-    return dataNormalized.filter((item) => item.id === contactId)[0];
+    return dataNormalized.filter((item) => item.id === contactId)[0] || null;
   } catch (e) {
     console.log(e.message);
   }
