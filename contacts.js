@@ -1,24 +1,42 @@
-import { promises as fs} from "fs"
+import { promises as fs } from "fs";
 import path from "path";
 
-const contactsPath = path.resolve("db", "contacts.json")
+const contactsPath = path.resolve("db", "contacts.json");
 
-const read = await fs.readFile(pathToFile)
-const readNormilized = read.toString()
-
-
-async function listContacts() {
-    // ...твій код. Повертає масив контактів.
+export async function listContacts() {
+  const data = await fs.readFile(contactsPath);
+  return JSON.parse(data);
 }
 
-async function getContactById(contactId) {
-    // ...твій код. Повертає об'єкт контакту з таким id. Повертає null, якщо контакт з таким id не знайдений.
+export async function getContactById(contactId) {
+  const data = await fs.readFile(contactsPath);
+  const dataNormalized = JSON.parse(data);
+  return dataNormalized.filter((item) => item.id === contactId);
 }
 
-async function removeContact(contactId) {
-    // ...твій код. Повертає об'єкт видаленого контакту. Повертає null, якщо контакт з таким id не знайдений.
+export async function removeContact(contactId) {
+  const data = await fs.readFile(contactsPath);
+  const dataNormalized = JSON.parse(data);
+  const isExist = dataNormalized.some(contact => contact.id === contactId)
+
+  if (isExist) {
+    return dataNormalized.filter((item) => item.id === contactId)[0];
+  } else {
+  return null;
+  }
 }
 
-async function addContact(name, email, phone) {
-    // ...твій код. Повертає об'єкт доданого контакту (з id).
+export async function addContact(name, email, phone) {
+  const data = await fs.readFile(contactsPath);
+  const dataArray = JSON.parse(data);
+  const newUser = {
+    id: String(Date.now()),
+    name,
+    email,
+    phone,
+  };
+  dataArray.push(newUser);
+  await fs.writeFile(contactsPath, JSON.stringify(dataArray));
+
+  return newUser;
 }
