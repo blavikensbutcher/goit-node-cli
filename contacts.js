@@ -6,7 +6,9 @@ const contactsPath = path.resolve("db", "contacts.json");
 export async function listContacts() {
   try {
     const data = await fs.readFile(contactsPath);
-    return JSON.parse(data);
+    const response = JSON.parse(data)
+    console.table(response)
+    return response;
   } catch (e) {
     console.log(e.message);
   }
@@ -26,7 +28,18 @@ export async function removeContact(contactId) {
   try {
     const data = await fs.readFile(contactsPath);
     const dataNormalized = JSON.parse(data);
-    return dataNormalized.filter((item) => item.id === contactId)[0] || null;
+    const response = dataNormalized.filter((item) => item.id === contactId)[0] || null;
+
+    //Found all users except contactId
+    const bd = dataNormalized.filter(item => item.id !== contactId) || null
+
+    //IF we don't have such users do not touch bd
+    if (bd) {
+      await fs.writeFile(contactsPath, JSON.stringify(bd))
+    }
+
+    console.log(response)
+    return response;
   } catch (e) {
     console.log(e.message);
   }
