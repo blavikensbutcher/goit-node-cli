@@ -10,7 +10,8 @@ export async function listContacts() {
     console.table(response)
     return response;
   } catch (e) {
-    console.log(e.message);
+    console.error("Can't get contact list error")
+    throw e
   }
 }
 
@@ -20,7 +21,8 @@ export async function getContactById(contactId) {
     const dataNormalized = JSON.parse(data);
     return dataNormalized.filter((item) => item.id === contactId)[0] || null;
   } catch (e) {
-    console.log(e.message);
+    console.error("Search contact by id error")
+    throw e
   }
 }
 
@@ -41,7 +43,8 @@ export async function removeContact(contactId) {
     console.log(response)
     return response;
   } catch (e) {
-    console.log(e.message);
+    console.error("Delete error");
+    throw e;
   }
 }
 
@@ -61,6 +64,7 @@ export async function addContact(name, email, phone) {
 
     return newUser;
   } catch (e) {
-    console.log(e.message);
+   console.error("Add contact error")
+    throw e
   }
 }
