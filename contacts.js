@@ -5,8 +5,11 @@ const contactsPath = path.resolve("db", "contacts.json");
 
 export async function listContacts() {
   try {
+    //Get all data from bd
     const data = await fs.readFile(contactsPath);
     const response = JSON.parse(data)
+
+    //return data with table view
     console.table(response)
     return response;
   } catch (e) {
@@ -17,9 +20,13 @@ export async function listContacts() {
 
 export async function getContactById(contactId) {
   try {
+    //Get data from db
     const data = await fs.readFile(contactsPath);
     const dataNormalized = JSON.parse(data);
+
+    //Get contact with current id or return null
     return dataNormalized.filter((item) => item.id === contactId)[0] || null;
+
   } catch (e) {
     console.error("Search contact by id error")
     throw e
@@ -38,12 +45,16 @@ export async function removeContact(contactId) {
     const updatedData = dataNormalized.filter(item => item.id !== contactId) || null
 
     //IF we don't have such users do not touch db
-    if (updatedData.length > 0) {
+    if (updatedData && updatedData.length > 0) {
       await fs.writeFile(contactsPath, JSON.stringify(updatedData))
     }
 
-    console.log(response)
-    return response;
+    if (response !== null) {
+      console.log(`Contact ${response} removed`)
+    }
+
+    return response
+
   } catch (e) {
     console.error("Delete error");
     throw e;
@@ -52,17 +63,26 @@ export async function removeContact(contactId) {
 
 export async function addContact(name, email, phone) {
   try {
+
+    //Get data from db
     const data = await fs.readFile(contactsPath);
     const dataArray = JSON.parse(data);
+
+    //Add new data to merge with original data
     const newUser = {
       id: String(Date.now()),
       name,
       email,
       phone,
     };
+
     dataArray.push(newUser);
 
+    //Write data to db
+
     await fs.writeFile(contactsPath, JSON.stringify(dataArray));
+
+    console.log(`Added new contact: ${newUser} `)
 
     return newUser;
   } catch (e) {
