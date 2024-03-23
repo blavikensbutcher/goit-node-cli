@@ -25,7 +25,7 @@ export async function getContactById(contactId) {
     const dataNormalized = JSON.parse(data);
 
 
-    console.log(dataNormalized.filter((item) => item.id === contactId)[0])
+    console.table(dataNormalized.filter((item) => item.id === contactId)[0])
     //Get contact with current id or return null
     return dataNormalized.filter((item) => item.id === contactId)[0] || null;
 
