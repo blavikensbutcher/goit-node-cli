@@ -24,6 +24,8 @@ export async function getContactById(contactId) {
     const data = await fs.readFile(contactsPath);
     const dataNormalized = JSON.parse(data);
 
+
+    console.log(dataNormalized.filter((item) => item.id === contactId)[0])
     //Get contact with current id or return null
     return dataNormalized.filter((item) => item.id === contactId)[0] || null;
 
