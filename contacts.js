@@ -84,7 +84,8 @@ export async function addContact(name, email, phone) {
 
     await fs.writeFile(contactsPath, JSON.stringify(dataArray));
 
-    console.log(`Added new contact: ${newUser} `)
+    console.log("Added new user:")
+    console.table(newUser)
 
     return newUser;
   } catch (e) {
