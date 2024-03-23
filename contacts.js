@@ -30,14 +30,16 @@ export async function removeContact(contactId) {
   try {
     const data = await fs.readFile(contactsPath);
     const dataNormalized = JSON.parse(data);
+
+    //Return deleted user
     const response = dataNormalized.filter((item) => item.id === contactId)[0] || null;
 
     //Found all users except contactId
-    const bd = dataNormalized.filter(item => item.id !== contactId) || null
+    const updatedData = dataNormalized.filter(item => item.id !== contactId) || null
 
-    //IF we don't have such users do not touch bd
-    if (bd) {
-      await fs.writeFile(contactsPath, JSON.stringify(bd))
+    //IF we don't have such users do not touch db
+    if (updatedData.length > 0) {
+      await fs.writeFile(contactsPath, JSON.stringify(updatedData))
     }
 
     console.log(response)
