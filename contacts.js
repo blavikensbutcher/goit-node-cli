@@ -52,7 +52,8 @@ export async function removeContact(contactId) {
     }
 
     if (response !== null) {
-      console.log(`Contact ${response} removed`)
+      console.log(`Contact removed`)
+      console.table(response)
     }
 
     return response
