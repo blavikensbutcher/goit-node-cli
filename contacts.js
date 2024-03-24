@@ -8,9 +8,7 @@ export async function listContacts() {
     //Get all data from bd
     const data = await fs.readFile(contactsPath);
     const response = JSON.parse(data)
-
     //return data with table view
-    console.table(response)
     return response;
   } catch (e) {
     console.error("Can't get contact list error")
@@ -25,7 +23,6 @@ export async function getContactById(contactId) {
     const dataNormalized = JSON.parse(data);
 
 
-    console.table(dataNormalized.filter((item) => item.id === contactId)[0])
     //Get contact with current id or return null
     return dataNormalized.filter((item) => item.id === contactId)[0] || null;
 
@@ -49,11 +46,6 @@ export async function removeContact(contactId) {
     //IF we don't have such users do not touch db
     if (updatedData && updatedData.length > 0) {
       await fs.writeFile(contactsPath, JSON.stringify(updatedData))
-    }
-
-    if (response !== null) {
-      console.log(`Contact removed`)
-      console.table(response)
     }
 
     return response
@@ -84,9 +76,6 @@ export async function addContact(name, email, phone) {
     //Write data to db
 
     await fs.writeFile(contactsPath, JSON.stringify(dataArray));
-
-    console.log("Added new user:")
-    console.table(newUser)
 
     return newUser;
   } catch (e) {
