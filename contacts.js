@@ -4,64 +4,39 @@ import path from "path";
 const contactsPath = path.resolve("db", "contacts.json");
 
 export async function listContacts() {
-  try {
     //Get all data from bd
     const data = await fs.readFile(contactsPath);
-    const response = JSON.parse(data)
-    //return data with table view
-    return response;
-  } catch (e) {
-    console.error("Can't get contact list error")
-    throw e
-  }
+    return JSON.parse(data);
 }
 
 export async function getContactById(contactId) {
-  try {
     //Get data from db
-    const data = await fs.readFile(contactsPath);
-    const dataNormalized = JSON.parse(data);
-
+    const data = await listContacts();
 
     //Get contact with current id or return null
-    return dataNormalized.filter((item) => item.id === contactId)[0] || null;
-
-  } catch (e) {
-    console.error("Search contact by id error")
-    throw e
-  }
+    return data.filter((item) => item.id === contactId)[0] || null;
 }
 
 export async function removeContact(contactId) {
-  try {
-    const data = await fs.readFile(contactsPath);
-    const dataNormalized = JSON.parse(data);
+    const data = await listContacts();
 
     //Return deleted user
-    const response = dataNormalized.filter((item) => item.id === contactId)[0] || null;
+    const response = data.filter((item) => item.id === contactId)[0] || null;
 
     //Found all users except contactId
-    const updatedData = dataNormalized.filter(item => item.id !== contactId) || null
+    const updatedData = data.filter(item => item.id !== contactId) || null
 
     //IF we don't have such users do not touch db
     if (updatedData && updatedData.length > 0) {
-      await fs.writeFile(contactsPath, JSON.stringify(updatedData))
+      await fs.writeFile(contactsPath, JSON.stringify(updatedData, null, 2))
     }
 
     return response
-
-  } catch (e) {
-    console.error("Delete error");
-    throw e;
-  }
 }
 
 export async function addContact(name, email, phone) {
-  try {
-
     //Get data from db
-    const data = await fs.readFile(contactsPath);
-    const dataArray = JSON.parse(data);
+    const data = await listContacts();
 
     //Add new data to merge with original data
     const newUser = {
@@ -71,15 +46,11 @@ export async function addContact(name, email, phone) {
       phone,
     };
 
-    dataArray.push(newUser);
+    data.push(newUser);
 
     //Write data to db
 
-    await fs.writeFile(contactsPath, JSON.stringify(dataArray));
+    await fs.writeFile(contactsPath, JSON.stringify(data, null, 2));
 
     return newUser;
-  } catch (e) {
-   console.error("Add contact error")
-    throw e
-  }
 }
